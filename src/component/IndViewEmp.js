@@ -13,7 +13,6 @@ const IndViewEmp = ({ emp, index,onDispatch,onEditRecord }) => {
     <tr>
       <td>{index + 1}</td>
       <td>{emp.name}</td>
-      <td>{emp.gender}</td>
       <td>{emp.age}</td>
       <td>{emp.designation}</td>
       <td>

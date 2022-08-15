@@ -18,8 +18,7 @@ const ViewEmp = (props) => {
         <thead>
           <tr>
             <th>Sr No</th>
-            <th>Name</th>
-            <th>Gender</th>
+            <th>Name</th>            
             <th>Age</th>
             <th>Designation</th>
             <th>Edit</th>

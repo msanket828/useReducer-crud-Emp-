@@ -7,12 +7,12 @@ import ViewEmp from './component/ViewEmp';
 export const ACTION = {
   ADDEMP: 'Add_Emp',
   REMOVEEMP: 'Remove_Emp',
-  // EDITEMP: 'Edit_Emp'
+  EDITEMP: 'Edit_Emp'
 }
 
 const initialState = [
-  { id: 1, name: 'Sanket S Mane', gender: 'Male', age: 28, designation: 'UI developer' },
-  { id: 2, name: 'Sushil S Jadhav', gender: 'Male', age: 26, designation: 'React js developer' },
+  { id: 1, name: 'Sanket S Mane', age: 28, designation: 'UI developer' },
+  { id: 2, name: 'Sushil S Jadhav', age: 26, designation: 'React js developer' },
 ]
 
 const reducerFn = (state, action) => {
@@ -21,10 +21,10 @@ const reducerFn = (state, action) => {
       return [...state, action.payLoad];
     case ACTION.REMOVEEMP:
       return state.filter((emp) => emp.id !== action.payLoad);
-    // case ACTION.EDITEMP:
-    //   // let editEMP = state.filter((emp) => emp.id === action.payLoad.id)
-    //   // console.log(editEMP);
-    //   return state;
+    case ACTION.EDITEMP:
+      let newState = [...state];
+      newState[state.findIndex((emp) => emp.id === action.payLoad.id)] = action.payLoad;
+      return newState;
     default:
       return state;
   }
@@ -37,12 +37,13 @@ const App = () => {
   const [editEmp, setEditEmp] = useState();
   const editRecord = (data) => {
     setEditEmp(data);
+    localStorage.setItem('isEdit', true);
   }
   return (
     <main>
       <Header />
-      <AddEmp onDispatch={dispatch} />
-      <ViewEmp state={state} onDispatch={dispatch} onEditRecord={editRecord} />      
+      <AddEmp onDispatch={dispatch} editEmp={editEmp} />
+      <ViewEmp state={state} onDispatch={dispatch} onEditRecord={editRecord} />
     </main>
   )
 }

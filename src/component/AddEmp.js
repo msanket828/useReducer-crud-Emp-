@@ -1,21 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { ACTION } from "../App";
 
 
 const AddEmp = (props) => {
+  const [editId, setEditId] = useState();
+  const [name, setName] = useState();
+  const [age, setAge] = useState();
+  const [designation, setDesignation] = useState();
 
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [designation, setDesignation] = useState('');
-  const [gender, setGender] = useState('');
+  useEffect(() => {
+    console.log('===AddEmp.js useffect called===');
+    setEditId(props?.editEmp?.id);
+    setName(props?.editEmp?.name);
+    setAge(props?.editEmp?.age);
+    setDesignation(props?.editEmp?.designation);
+  }, [props?.editEmp?.id, props?.editEmp?.name, props?.editEmp?.age, props?.editEmp?.designation])
+
 
   const handleName = (e) => {
     setName(e.target.value);
-  };
-
-  const handleGender = (e) => {
-    setGender(e.target.value);
   };
 
   const handleAge = (e) => {
@@ -28,20 +32,31 @@ const AddEmp = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.onDispatch({
-      type: ACTION.ADDEMP,
-      payLoad: {
-        id: uuidv4(),
-        name,
-        gender,
-        age,
-        designation
-      },
-    });
+    localStorage.getItem('isEdit') ? (
+      props.onDispatch({
+        type: ACTION.EDITEMP,
+        payLoad: {
+          id: editId,
+          name,
+          age,
+          designation
+        }
+      })
+    ) : (
+      props.onDispatch({
+        type: ACTION.ADDEMP,
+        payLoad: {
+          id: uuidv4(),
+          name,
+          age,
+          designation
+        },
+      })
+    );
     setName('');
-    setGender('');
     setAge('');
     setDesignation('');
+    localStorage.removeItem('isEdit');
   };
 
   return (
@@ -61,41 +76,8 @@ const AddEmp = (props) => {
             placeholder="Full Name"
             className="form-control"
             onChange={handleName}
-            value={name}
+            value={name || ''}
           />
-        </div>
-        <div className="form-group mb-4">
-          <label htmlFor="gender" className="form-label">
-            Gender
-          </label>
-          <div className="flex items-center pl-3">
-            <div className="flex items-center mr-6">
-              <input
-                onChange={handleGender}
-                type="radio"
-                name="gender"
-                id="male"
-                value="Male"
-                checked={gender === "Male"}
-              />
-              <label className="radio-label-v1" htmlFor="male">
-                Male
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                onChange={handleGender}
-                type="radio"
-                name="gender"
-                id="female"
-                value="Female"
-                checked={gender === "Female"}
-              />
-              <label className="radio-label-v1" htmlFor="female">
-                Female
-              </label>
-            </div>
-          </div>
         </div>
         <div className="form-group mb-4">
           <label htmlFor="age" className="form-label">
@@ -108,7 +90,7 @@ const AddEmp = (props) => {
             placeholder="Enter Age"
             onChange={handleAge}
             className="form-control"
-            value={age}
+            value={age || ''}
             min="0"
             max="99"
           />
@@ -123,7 +105,7 @@ const AddEmp = (props) => {
             id="designation"
             placeholder="Enter Designation"
             onChange={handleDesignation}
-            value={designation}
+            value={designation || ''}
             className="form-control"
           />
         </div>
